@@ -52,6 +52,6 @@ Color3f SimpleTracer::Li(const Ray& ray) const {
     }
     //Vector3f normal = Abs(record.shadingFrame.n);
     auto diffuseTexture = context->GetTexture(0);
-    auto diffuseColor = diffuseTexture->SampleByNearest(record.uv);
+    auto diffuseColor = diffuseTexture->SampleByBilinear(record.uv);
     return RGBA32ToColor3f(diffuseColor);
 }
