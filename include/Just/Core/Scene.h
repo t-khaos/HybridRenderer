@@ -2,7 +2,7 @@
 
 #include "Just/Common.h"
 #include "Just/Geometry/Mesh.h"
-#include "Just/Accel/Accel.h"
+#include "Accel.h"
 #include "Just/Accel/NaiveAccel.h"
 #include "Just/Accel/BVHAccel.h"
 
@@ -20,12 +20,12 @@ public:
     std::shared_ptr<Accel> accel;
 };
 
-//Ìí¼ÓÈý½ÇÐÎÍø¸ñ
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void Scene::AddMesh(const std::shared_ptr<Mesh> &mesh)
 {
     meshes.emplace_back(mesh);
 }
-//¼¤»î¼ÓËÙ½á¹¹
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù½á¹¹
 void Scene::BuildAccel()
 {
     accel->Reset();

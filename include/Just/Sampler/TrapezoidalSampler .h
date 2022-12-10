@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Just/Common.h"
-#include "Just/Sampler/Sampler.h"
+#include "Just/Core/Sampler.h"
 
 struct TrapezoidalSampler : public Sampler
 {

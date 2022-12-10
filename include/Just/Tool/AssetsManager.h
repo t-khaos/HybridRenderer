@@ -3,7 +3,7 @@
 #include "Just/Common.h"
 #include "Just/Texture/Texture2D.h"
 #include "Just/Geometry/Mesh.h"
-#include "Just/Geometry/MeshVertex.h"
+#include "Just/Core/MeshVertex.h"
 #include "Just/Math/Transform.h"
 
 struct AssetsManager

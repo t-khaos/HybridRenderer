@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Just/Common.h"
-#include "Just/Accel/Accel.h"
+#include "Just/Core/Accel.h"
 
 struct NaiveAccel : public Accel
 {

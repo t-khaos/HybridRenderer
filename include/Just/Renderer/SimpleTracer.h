@@ -2,8 +2,8 @@
 
 #include "Just/Common.h"
 #include "Just/Core/Renderer.h"
-#include "Just/Camera/Camera.h"
-#include "Just/Sampler/Sampler.h"
+#include "Just/Core/Camera.h"
+#include "Just/Core/Sampler.h"
 
 struct SimpleTracer : public Tracer
 {

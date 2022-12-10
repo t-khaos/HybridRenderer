@@ -3,7 +3,7 @@
 #include "Just/Common.h"
 #include "Just/Core/Scene.h"
 #include "Just/Core/RenderContext.h"
-#include "Just/Sampler/Sampler.h"
+#include "Sampler.h"
 
 struct Renderer
 {

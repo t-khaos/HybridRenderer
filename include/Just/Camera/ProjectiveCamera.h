@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Just/Common.h"
-#include "Just/Camera/Camera.h"
+#include "Just/Core/Camera.h"
 #include "Just/Math/Transform.h"
 
 struct ProjectiveCamera : public Camera
