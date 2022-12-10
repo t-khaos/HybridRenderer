@@ -23,8 +23,10 @@ void SimpleTracer::Render()
     Color3f radiance(0.0f);
     int width = context->camera->res.x;
     int height = context->camera->res.y;
+#ifdef ENABLE_OPENMP
     //OpenMP多线程渲染
 #pragma omp parallel for schedule(dynamic) private(radiance)
+#endif
     for (int y = 0; y < height; ++y)
     {
         //printf("\r%f\n", 100.0f * float(y) / float(film->resolution.y - 1));

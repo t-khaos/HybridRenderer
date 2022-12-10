@@ -21,8 +21,10 @@ void SimpleRasterizer::Render()
     for (const auto &mesh: scene->accel->meshes)
     {
         RasterVertex triangle[3];
+#ifdef ENABLE_OPENMP
         //OpenMP多线程渲染
 #pragma omp parallel for schedule(dynamic) private(triangle)
+#endif
         //遍历网格所有三角形
         for (int i = 0; i < mesh->indices.size(); i += 3)
         {
