@@ -19,5 +19,5 @@ add_executable(
 )
 add_executable(
         matrix_test
-        src/matrix_test.cpp
+        src/math_test.cpp
 )

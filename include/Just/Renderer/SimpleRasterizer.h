@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Just/Common.h"
-#include "Just/Render/Renderer.h"
+#include "Just/Core/Renderer.h"
 #include "Just/Math/Color.h"
 
 struct SimpleRasterizer : public Rasterizer

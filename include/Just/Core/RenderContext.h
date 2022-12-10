@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Just/Common.h"
-#include "Just/Render/FrameBuffer.h"
-#include "Just/Render/RasterVertex.h"
+#include "Just/Core/FrameBuffer.h"
+#include "Just/Core/RasterVertex.h"
 
 struct RenderContext
 {

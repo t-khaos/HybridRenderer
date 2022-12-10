@@ -111,14 +111,6 @@ void TestMatrix()
     std::cout << "m1 adjoint = " << std::endl << Adjoint(m3) << std::endl;
     std::cout << "m1 det = " << Det(m3) << std::endl;
     std::cout << "m3 inverse = " << std::endl << Inverse(m3) << std::endl;
-    Matrix4f screenMapping{
-            {-384, 0, 0, 384},
-            {0, -384, 0, 384},
-            {0, 0, 1, 0},
-            {0, 0, 0, 1}
-    };
-    std::cout << "====================================================" << std::endl;
-    std::cout << "screenMapping inverse = " << std::endl << Inverse(screenMapping) << std::endl;
 }
 int main()
 {

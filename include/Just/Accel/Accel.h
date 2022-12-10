@@ -3,7 +3,7 @@
 #include "Just/Common.h"
 #include "Just/Geometry/Mesh.h"
 #include "Just/Geometry/Bounds.h"
-#include "Just/Render/RenderContext.h"
+#include "Just/Core/RenderContext.h"
 
 enum class AccelType
 {

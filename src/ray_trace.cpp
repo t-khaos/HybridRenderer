@@ -1,9 +1,9 @@
 
 #include "Just/Tool/AssetsManager.h"
 #include "Just/Camera/ProjectiveCamera.h"
-#include "Just/Render/RenderContext.h"
-#include "Just/Render/Scene.h"
-#include "Just/RayTracer/SimpleTracer.h"
+#include "Just/Core//RenderContext.h"
+#include "Just/Core/Scene.h"
+#include "Just/Renderer/SimpleTracer.h"
 #include "Just/Tool/Timer.h"
 #include "Just/Sampler/TrapezoidalSampler .h"
 

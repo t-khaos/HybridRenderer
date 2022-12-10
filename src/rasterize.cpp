@@ -1,9 +1,9 @@
 
 #include "Just/Tool/AssetsManager.h"
 #include "Just/Camera/ProjectiveCamera.h"
-#include "Just/Render/RenderContext.h"
-#include "Just/Render/Scene.h"
-#include "Just/Rasterizer/SimpleRasterizer.h"
+#include "Just/Core/RenderContext.h"
+#include "Just/Core/Scene.h"
+#include "Just/Renderer/SimpleRasterizer.h"
 #include "Just/Tool/Timer.h"
 
 int main()

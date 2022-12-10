@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Just/Common.h"
-#include "Just/Render/Scene.h"
-#include "Just/Render/RenderContext.h"
+#include "Just/Core/Scene.h"
+#include "Just/Core/RenderContext.h"
 #include "Just/Sampler/Sampler.h"
 
 struct Renderer
