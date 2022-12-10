@@ -1,5 +1,6 @@
 #pragma once
 
+#include <omp.h>
 #include "Just/Common.h"
 #include "Just/Core/Renderer.h"
 #include "Just/Math/Color.h"
@@ -20,6 +21,9 @@ void SimpleRasterizer::Render()
     //遍历所有三角形网格
     for (const auto &mesh: scene->accel->meshes)
     {
+        //OpenMP多线程渲染
+        omp_set_num_threads(8);
+#pragma omp parallel for
         //遍历网格所有三角形
         for (int i = 0; i < mesh->indices.size(); i += 3)
         {
@@ -77,13 +81,14 @@ void SimpleRasterizer::DrawTriangle()
     if (Cross(context->triangle[1].pos4 - context->triangle[0].pos4,
               context->triangle[2].pos4 - context->triangle[0].pos4).z >= 0)
         return;
-
+    RGBA32 fragColor;
     //光栅化阶段
+    //OpenMP多线程渲染
     for (int y = rect.pMin.y; y <= rect.pMax.y; y++)
     {
         for (int x = rect.pMin.x; x <= rect.pMax.x; x++)
         {
-
+            fragColor = RGBA32{0, 0, 0, 255};
             //计算当前像素的重心坐标
             auto [alpha, beta, gamma] = CalcBarycentric(context->triangle, (float) x, (float) y);
 
@@ -113,7 +118,6 @@ void SimpleRasterizer::DrawTriangle()
                                     texcoord;
             //插值法线
             //auto normal = alpha * context->triangle[0].normal + beta * context->triangle[1].normal + gamma * context->triangle[2].normal;
-            RGBA32 fragColor;
 
             //片元着色
             {

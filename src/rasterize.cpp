@@ -54,6 +54,7 @@ int main()
     rasterizer->Render();
     timer.End();
     std::cout << "[render time]: " << timer.time << "ms" << std::endl;
+    std::cout << "[FPS]: " << 1000.0f / timer.time << "ms" << std::endl;
     //==================================================================================================
     //保存
     SaveImageToBMP("output/rasterize.bmp", res.x, res.y, 4, context->frameBuffer->colorBuffer);
