@@ -1,6 +1,5 @@
 #pragma once
 
-#include <omp.h>
 #include "Just/Common.h"
 #include "Just/Core/Renderer.h"
 #include "Just/Math/Color.h"
@@ -13,7 +12,7 @@ public:
     ~SimpleRasterizer() override = default;
     virtual void Render() override;
 private:
-    virtual void DrawTriangle() override;
+    virtual void DrawTriangle(RasterVertex *triangle) override;
 };
 
 void SimpleRasterizer::Render()
@@ -21,9 +20,9 @@ void SimpleRasterizer::Render()
     //遍历所有三角形网格
     for (const auto &mesh: scene->accel->meshes)
     {
+        RasterVertex triangle[3];
         //OpenMP多线程渲染
-        omp_set_num_threads(8);
-#pragma omp parallel for
+#pragma omp parallel for schedule(dynamic) private(triangle)
         //遍历网格所有三角形
         for (int i = 0; i < mesh->indices.size(); i += 3)
         {
@@ -31,21 +30,22 @@ void SimpleRasterizer::Render()
             for (int j = 0; j < 3; j++)
             {
                 auto index = mesh->indices[i + j];
-                context->triangle[j].pos4 = Point4f{mesh->positions[index], 1};
-                context->triangle[j].texcoord = mesh->texcoords[index];
-                context->triangle[j].normal = mesh->normals[index];
+                triangle[j].pos4 = Point4f{mesh->positions[index], 1};
+                triangle[j].texcoord = mesh->texcoords[index];
+                triangle[j].normal = mesh->normals[index];
             }
             //绘制当前三角形
-            DrawTriangle();
+            DrawTriangle(triangle);
         }
     }
 }
-void SimpleRasterizer::DrawTriangle()
+void SimpleRasterizer::DrawTriangle(RasterVertex *triangle)
 {
     Bounds2i rect;
     //几何阶段
-    for (auto &vertex: context->triangle)
+    for (int i = 0; i < 3; ++i)
     {
+        auto &vertex = triangle[i];
         //vertex shader
         {
             auto &MVP = context->GetUniform<Matrix4f>("MVP");
@@ -78,8 +78,8 @@ void SimpleRasterizer::DrawTriangle()
     rect.Clamp(context->frameBuffer->screenRect);
 
     //背面剔除
-    if (Cross(context->triangle[1].pos4 - context->triangle[0].pos4,
-              context->triangle[2].pos4 - context->triangle[0].pos4).z >= 0)
+    if (Cross(triangle[1].pos4 -triangle[0].pos4,
+             triangle[2].pos4 -triangle[0].pos4).z >= 0)
         return;
     RGBA32 fragColor;
     //光栅化阶段
@@ -90,15 +90,15 @@ void SimpleRasterizer::DrawTriangle()
         {
             fragColor = RGBA32{0, 0, 0, 255};
             //计算当前像素的重心坐标
-            auto [alpha, beta, gamma] = CalcBarycentric(context->triangle, (float) x, (float) y);
+            auto [alpha, beta, gamma] = CalcBarycentric(triangle, (float) x, (float) y);
 
             //检查点是否在三角形内
             if (beta < 0 || gamma < 0 || gamma + beta > 1.0f + kEpsilon) continue;
 
             //插值深度 w=z的倒数
-            float rhw = alpha * context->triangle[0].rhw +
-                        beta * context->triangle[1].rhw +
-                        gamma * context->triangle[2].rhw;
+            float rhw = alpha *triangle[0].rhw +
+                        beta *triangle[1].rhw +
+                        gamma *triangle[2].rhw;
 
             //early-z
             int index = x + y * context->frameBuffer->res.x;
@@ -107,17 +107,17 @@ void SimpleRasterizer::DrawTriangle()
 
             //透视插值校正
             float w = 1.0f / ((rhw == 0.0f) ? 1.0f : rhw);
-            alpha = alpha * w * context->triangle[0].rhw;
-            beta = beta * w * context->triangle[1].rhw;
-            gamma = gamma * w * context->triangle[2].rhw;
+            alpha = alpha * w *triangle[0].rhw;
+            beta = beta * w *triangle[1].rhw;
+            gamma = gamma * w *triangle[2].rhw;
 
 
             //插值纹理坐标
-            auto texcoord = alpha * context->triangle[0].texcoord + beta * context->triangle[1].texcoord +
-                            gamma * context->triangle[2].
+            auto texcoord = alpha *triangle[0].texcoord + beta *triangle[1].texcoord +
+                            gamma *triangle[2].
                                     texcoord;
             //插值法线
-            //auto normal = alpha * context->triangle[0].normal + beta * context->triangle[1].normal + gamma * context->triangle[2].normal;
+            //auto normal = alpha *triangle[0].normal + beta *triangle[1].normal + gamma *triangle[2].normal;
 
             //片元着色
             {

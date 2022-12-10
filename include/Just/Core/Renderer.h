@@ -8,7 +8,7 @@
 struct Renderer
 {
 public:
-    Renderer(std::shared_ptr<Scene> scene,std::shared_ptr<RenderContext> context)
+    Renderer(const std::shared_ptr<Scene> &scene, const std::shared_ptr<RenderContext> &context)
             : scene(scene), context(context) {};
     virtual ~Renderer() = default;
     virtual void Render() = 0;
@@ -25,7 +25,7 @@ public:
     virtual ~Rasterizer() = default;
     virtual void Render() = 0;
 private:
-    virtual void DrawTriangle() = 0;
+    virtual void DrawTriangle(RasterVertex *triangle) = 0;
 };
 
 struct Tracer : public Renderer

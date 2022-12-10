@@ -12,8 +12,7 @@ struct RasterVertex
     Point2f texcoord;
     Vector3f normal;
 };
-
-inline std::tuple<float, float, float> CalcBarycentric(const std::vector<RasterVertex> &triangle, float x, float y)
+inline std::tuple<float, float, float> CalcBarycentric(RasterVertex *triangle, float x, float y)
 {
     auto &A = triangle[0].pos2f;
     auto &B = triangle[1].pos2f;

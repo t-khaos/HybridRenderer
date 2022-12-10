@@ -7,7 +7,6 @@
 struct RenderContext
 {
 public:
-    std::vector<RasterVertex> triangle{3};
     std::shared_ptr<FrameBuffer> frameBuffer;
     std::shared_ptr<ProjectiveCamera> camera;
     explicit RenderContext(const std::shared_ptr<ProjectiveCamera> &camera, const std::shared_ptr<FrameBuffer> &frameBuffer)

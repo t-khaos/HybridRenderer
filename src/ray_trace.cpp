@@ -55,7 +55,7 @@ int main()
     tracer->Render();
     timer.End();
     std::cout << "[render time]: " << timer.time << "ms" << std::endl;
-    std::cout << "[FPS]: " << 1000.0f / timer.time << "ms" << std::endl;
+    std::cout << "[FPS]: " << 1000.0f / timer.time << std::endl;
     //==================================================================================================
     //保存
     SaveImageToBMP("output/ray_trace.bmp", res.x, res.y, 4, context->frameBuffer->colorBuffer);
