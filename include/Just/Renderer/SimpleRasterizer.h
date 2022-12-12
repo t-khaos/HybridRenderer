@@ -8,7 +8,7 @@ struct SimpleRasterizer : public Rasterizer
 {
 public:
     SimpleRasterizer(const std::shared_ptr<Scene> &scene, const std::shared_ptr<RenderContext> &context)
-            : Rasterizer(scene, context) {};
+            : Renderer(scene, context), Rasterizer(scene, context) {};
     ~SimpleRasterizer() override = default;
     virtual void Render() override;
 private:
@@ -80,17 +80,15 @@ void SimpleRasterizer::DrawTriangle(RasterVertex *triangle)
     rect.Clamp(context->frameBuffer->screenRect);
 
     //背面剔除
-    if (Cross(triangle[1].pos4 -triangle[0].pos4,
-             triangle[2].pos4 -triangle[0].pos4).z >= 0)
+    if (Cross(triangle[1].pos4 - triangle[0].pos4,
+              triangle[2].pos4 - triangle[0].pos4).z >= 0)
         return;
-    RGBA32 fragColor;
     //光栅化阶段
     //OpenMP多线程渲染
     for (int y = rect.pMin.y; y <= rect.pMax.y; y++)
     {
         for (int x = rect.pMin.x; x <= rect.pMax.x; x++)
         {
-            fragColor = RGBA32{0, 0, 0, 255};
             //计算当前像素的重心坐标
             auto [alpha, beta, gamma] = CalcBarycentric(triangle, (float) x, (float) y);
 
@@ -98,9 +96,9 @@ void SimpleRasterizer::DrawTriangle(RasterVertex *triangle)
             if (beta < 0 || gamma < 0 || gamma + beta > 1.0f + kEpsilon) continue;
 
             //插值深度 w=z的倒数
-            float rhw = alpha *triangle[0].rhw +
-                        beta *triangle[1].rhw +
-                        gamma *triangle[2].rhw;
+            float rhw = alpha * triangle[0].rhw +
+                        beta * triangle[1].rhw +
+                        gamma * triangle[2].rhw;
 
             //early-z
             int index = x + y * context->frameBuffer->res.x;
@@ -109,24 +107,25 @@ void SimpleRasterizer::DrawTriangle(RasterVertex *triangle)
 
             //透视插值校正
             float w = 1.0f / ((rhw == 0.0f) ? 1.0f : rhw);
-            alpha = alpha * w *triangle[0].rhw;
-            beta = beta * w *triangle[1].rhw;
-            gamma = gamma * w *triangle[2].rhw;
+            alpha = alpha * w * triangle[0].rhw;
+            beta = beta * w * triangle[1].rhw;
+            gamma = gamma * w * triangle[2].rhw;
 
 
             //插值纹理坐标
-            auto texcoord = alpha *triangle[0].texcoord + beta *triangle[1].texcoord +
-                            gamma *triangle[2].
+            auto texcoord = alpha * triangle[0].texcoord + beta * triangle[1].texcoord +
+                            gamma * triangle[2].
                                     texcoord;
             //插值法线
             //auto normal = alpha *triangle[0].normal + beta *triangle[1].normal + gamma *triangle[2].normal;
 
             //片元着色
+            Color3f fragColor;
             {
                 const auto &diffuseMap = context->GetTexture(0);
-                fragColor = diffuseMap->SampleByBilinear(texcoord);
+                fragColor = diffuseMap->SampleByBilinear(texcoord.x, texcoord.y);
             }
-            context->frameBuffer->colorBuffer[index] = fragColor;
+            context->frameBuffer->colorBuffer[index] = Color3fToRGBA32(fragColor);
         }
     }
 }

@@ -3,30 +3,37 @@
 #include "Just/Common.h"
 #include "Just/Math/Vector.h"
 #include "Just/Texture/Image.h"
+#include "Just/Core/Texture.h"
 
-struct Texture2D
+struct Texture2D : public Texture
 {
 public:
     std::unique_ptr<Image> image;
     explicit Texture2D(Image *image) : image(image) {}
+    virtual ~Texture2D() override = default;
+    virtual Color3f Evaluate(float u, float v) const override;
     int GetWidth() const { return image->width; }
     int GetHeight() const { return image->height; }
-    RGBA32 SampleByNearest(const Point2f &coord) const;
-    RGBA32 SampleByBilinear(const Point2f &coord) const;
+    Color3f SampleByNearest(float u, float v) const;
+    Color3f SampleByBilinear(float u, float v) const;
 };
 
-inline RGBA32 Texture2D::SampleByNearest(const Point2f &coord) const
+inline Color3f Texture2D::Evaluate(float u, float v) const
 {
-    float x = coord.x * (float) image->width + 0.5f;
-    float y = coord.y * (float) image->height + 0.5f;
-    uint32_t u = static_cast<uint32_t>(x);
-    uint32_t v = static_cast<uint32_t>(y);
-    return image->data[u + v * image->width];
+    return SampleByBilinear(u, v);
 }
-inline RGBA32 Texture2D::SampleByBilinear(const Point2f &coord) const
+inline Color3f Texture2D::SampleByNearest(float u, float v) const
 {
-    float x = coord.x * (float) image->width + 0.5f;
-    float y = coord.y * (float) image->height + 0.5f;
+    float x = u * (float) image->width + 0.5f;
+    float y = v * (float) image->height + 0.5f;
+    uint32_t s = static_cast<uint32_t>(x);
+    uint32_t t = static_cast<uint32_t>(y);
+    return RGBA32ToColor3f(image->data[s + t * image->width]);
+}
+inline Color3f Texture2D::SampleByBilinear(float u, float v) const
+{
+    float x = u * (float) image->width + 0.5f;
+    float y = v * (float) image->height + 0.5f;
     //整型坐标
     int x1 = std::clamp((int) x, 0, image->width - 1);
     int y1 = std::clamp((int) y, 0, image->height - 1);
@@ -43,6 +50,6 @@ inline RGBA32 Texture2D::SampleByBilinear(const Point2f &coord) const
     Color3f u01 = RGBA32ToColor3f(image->data[x1 + y2 * image->width]);
     Color3f u11 = RGBA32ToColor3f(image->data[x2 + y2 * image->width]);
     //线性插值
-    return Color3fToRGBA32(u00 * w00 + u10 * w10 + u01 * w01 + u11 * w11);
+    return u00 * w00 + u10 * w10 + u01 * w01 + u11 * w11;
 }
 

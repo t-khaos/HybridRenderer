@@ -11,7 +11,7 @@ public:
     explicit SimpleTracer(const std::shared_ptr<Scene> &scene,
                           const std::shared_ptr<RenderContext> &context,
                           const std::shared_ptr<Sampler> &sampler)
-            : Tracer(scene, context, sampler) {};
+            : Renderer(scene, context), Tracer(scene, context, sampler) {};
     ~SimpleTracer() override = default;
     virtual void Render() override;
 public:
@@ -45,15 +45,16 @@ void SimpleTracer::Render()
         }
     }
 }
-
-Color3f SimpleTracer::Li(const Ray& ray) const {
+Color3f SimpleTracer::Li(const Ray &ray) const
+{
     //射线相交测试
     HitRecord record;
-    if (!scene->RayIntersect(ray, record)) {
-        return Color3f (0.0f);
+    if (!scene->RayIntersect(ray, record))
+    {
+        return Color3f(0.0f);
     }
     //Vector3f normal = Abs(record.shadingFrame.n);
     auto diffuseTexture = context->GetTexture(0);
-    auto diffuseColor = diffuseTexture->SampleByBilinear(record.uv);
-    return RGBA32ToColor3f(diffuseColor);
+    auto diffuseColor = diffuseTexture->Evaluate(record.uv.x, record.uv.y);
+    return diffuseColor;
 }

@@ -17,7 +17,7 @@ protected:
     std::shared_ptr<RenderContext> context;
 };
 
-struct Rasterizer : public Renderer
+struct Rasterizer : virtual public Renderer
 {
 public:
     Rasterizer(const std::shared_ptr<Scene> &scene, const std::shared_ptr<RenderContext> &context)
@@ -28,7 +28,7 @@ private:
     virtual void DrawTriangle(RasterVertex *triangle) = 0;
 };
 
-struct Tracer : public Renderer
+struct Tracer : virtual public Renderer
 {
 public:
     explicit Tracer(const std::shared_ptr<Scene> &scene,
