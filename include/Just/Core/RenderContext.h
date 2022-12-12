@@ -12,14 +12,14 @@ public:
     explicit RenderContext(const std::shared_ptr<ProjectiveCamera> &camera, const std::shared_ptr<FrameBuffer> &frameBuffer)
             : camera(camera), frameBuffer(frameBuffer) {};
     ~RenderContext() = default;
-    std::shared_ptr<Texture2D> GetTexture(int slot) const { return textures.at(slot); }
-    void AddTexture(int slot, const std::shared_ptr<Texture2D> &texture) { textures.emplace_back(texture); }
+    std::shared_ptr<Texture> GetTexture(int slot) const { return textures.at(slot); }
+    void AddTexture(int slot, const std::shared_ptr<Texture> &texture) { textures.emplace_back(texture); }
     template<typename T>
     const T &GetUniform(const std::string &name) const;
     template<typename T>
     void SetUniform(const std::string &name, T value);
 private:
-    std::vector<std::shared_ptr<Texture2D>> textures;
+    std::vector<std::shared_ptr<Texture>> textures;
     std::unordered_map<std::string, float> f32map;
     std::unordered_map<std::string, Vector2f> vec2map;
     std::unordered_map<std::string, Vector3f> vec3map;

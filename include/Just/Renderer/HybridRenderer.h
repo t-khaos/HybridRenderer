@@ -4,19 +4,23 @@
 #include "Just/Core/Renderer.h"
 #include "Just/Math/Color.h"
 
-struct SimpleRasterizer : public Rasterizer
+struct HybridRenderer : public Rasterizer, public Tracer
 {
 public:
-    SimpleRasterizer(const std::shared_ptr<Scene> &scene, const std::shared_ptr<RenderContext> &context)
-            : Renderer(scene, context), Rasterizer(scene, context) {};
-    ~SimpleRasterizer() override = default;
+    HybridRenderer(const std::shared_ptr<Scene> &scene,
+                   const std::shared_ptr<RenderContext> &context,
+                   const std::shared_ptr<Sampler> &sampler)
+            : Renderer(scene, context), Rasterizer(scene, context), Tracer(scene, context, sampler) {};
+    ~HybridRenderer() override = default;
     virtual void Render() override;
 private:
     virtual void DrawTriangle(RasterVertex *triangle) override;
+    virtual Color3f Li(const Ray &ray) const override;
 };
 
-void SimpleRasterizer::Render()
+void HybridRenderer::Render()
 {
+    //光栅化部分
     //遍历所有三角形网格
     for (const auto &mesh: scene->accel->meshes)
     {
@@ -40,8 +44,45 @@ void SimpleRasterizer::Render()
             DrawTriangle(triangle);
         }
     }
+    //光线追踪部分
+    Color3f radiance(0.0f);
+    int width = context->camera->res.x;
+    int height = context->camera->res.y;
+#ifdef ENABLE_OPENMP
+    //OpenMP多线程渲染
+#pragma omp parallel for schedule(dynamic) private(radiance)
+#endif
+    for (int y = 0; y < height; ++y)
+    {
+        //printf("\r%f\n", 100.0f * float(y) / float(film->resolution.y - 1));
+        for (int x = 0; x < width; ++x)
+        {
+            radiance = Color3f(0.0f);
+            for (int i = 0; i < sampler->spp; ++i)
+            {
+                //投射光线并累计颜色
+                Ray ray = context->camera->GenerateRay(Point2f(float(x), float(y)));
+                radiance += Li(ray);
+            }
+            radiance /= sampler->spp;
+            int index = y * width + x;
+            context->frameBuffer->colorBuffer[index] = Color3fToRGBA32(radiance);
+        }
+    }
 }
-void SimpleRasterizer::DrawTriangle(RasterVertex *triangle)
+Color3f HybridRenderer::Li(const Ray &ray) const
+{
+    //射线相交测试
+    HitRecord record;
+    if (!scene->RayIntersect(ray, record))
+    {
+        return Color3f(0.0f);
+    }
+    auto diffuseTexture = context->GetTexture(0);
+    auto diffuseColor = diffuseTexture->Evaluate(record.uv.x, record.uv.y);
+    return diffuseColor;
+}
+void HybridRenderer::DrawTriangle(RasterVertex *triangle)
 {
     Bounds2i rect;
     //几何阶段
