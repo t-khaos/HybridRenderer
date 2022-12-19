@@ -71,12 +71,6 @@ Mesh *AssetsManager::LoadMesh(const std::string &path, const Transform &transfor
         //解析数据
         if (prefix == "v")
         {
-/*            Point3f v;
-            strStream >> v.x >> v.y >> v.z;
-            //v = transform->TransPoint(v);
-            vs.push_back(v);
-            //bounds.Expand(v);*/
-
             Point4f v4f;
             strStream >> v4f.x >> v4f.y >> v4f.z;
             v4f.w = 1;
@@ -88,7 +82,6 @@ Mesh *AssetsManager::LoadMesh(const std::string &path, const Transform &transfor
         {
             Vector3f vn;
             strStream >> vn.x >> vn.y >> vn.z;
-            //vns.push_back(Normalize(vn));
             vns.push_back(Normalize(transform(vn)));
         }
         else if (prefix == "vt")
@@ -109,9 +102,9 @@ Mesh *AssetsManager::LoadMesh(const std::string &path, const Transform &transfor
             if (!v4.empty())
             {
                 vNums = 6;
-                meshTriangle[3] = StringToMeshVertex(v4);
-                meshTriangle[4] = StringToMeshVertex(v2);
-                meshTriangle[5] = StringToMeshVertex(v3);
+                meshTriangle[3] = StringToMeshVertex(v1);
+                meshTriangle[4] = StringToMeshVertex(v3);
+                meshTriangle[5] = StringToMeshVertex(v4);
             }
             for (int i = 0; i < vNums; i++)
             {
