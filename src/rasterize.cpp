@@ -19,11 +19,11 @@ int main()
     float zFar = 1e4f;
     //资源
     //==================================================================================================
-    auto texture_diffuse = std::shared_ptr<Texture2D>(AssetsManager::LoadTexture2D("res/texture2.png"));
+    auto texture_diffuse = std::shared_ptr<Texture2D>(AssetsManager::LoadTexture2D("res/test_cube_diffuse.tga"));
     auto texture_constant = std::make_shared<ConstantTexture>(Color3f{1.0f, 0.0f, 0.0f});
     Timer timer;
     timer.Begin();
-    auto mesh_african = std::shared_ptr<Mesh>(AssetsManager::LoadMesh("res/model_african.obj"));
+    auto mesh_african = std::shared_ptr<Mesh>(AssetsManager::LoadMesh("res/cube.obj"));
     timer.End();
     std::cout << "[load time]: " << timer.time << "ms" << std::endl;
     //相机
@@ -38,7 +38,7 @@ int main()
     //==================================================================================================
     auto context = std::make_shared<RenderContext>(camera, frameBuffer);
     context->SetUniform("MVP", MVP.matrix);
-    context->AddTexture(0, texture_constant);
+    context->AddTexture(0, texture_diffuse);
     //构建场景
     //==================================================================================================
     timer.Begin();

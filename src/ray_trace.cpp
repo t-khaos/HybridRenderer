@@ -19,11 +19,11 @@ int main()
     float zNear = 1e-4f;
     float zFar = 1e4f;
     int spp = 1;
-    auto modelTransform = Translate(Vector3f(0, 0, -3));
+    auto modelTransform =  Translate(Vector3f(0, 0, -3)) * RotateY(30) * RotateX(30);
     //资源
     //==================================================================================================
-    auto texture_diffuse = std::shared_ptr<Texture2D>(AssetsManager::LoadTexture2D("res/texture2.png"));
-    auto mesh_african = std::shared_ptr<Mesh>(AssetsManager::LoadMesh("res/model_african.obj", modelTransform));
+    auto texture_diffuse = std::shared_ptr<Texture2D>(AssetsManager::LoadTexture2D("res/test_cube_diffuse.tga"));
+    auto mesh_african = std::shared_ptr<Mesh>(AssetsManager::LoadMesh("res/cube.obj", modelTransform));
     //相机
     //==================================================================================================
     auto camera = std::make_shared<PerspectiveCamera>(res, Inverse(LookAt(origin, target, up)), fov, zNear, zFar);
