@@ -87,7 +87,7 @@ void Accel::Build()
     auto root = AccelNode(bounds, faceIndices.size());
     root.faceIndices = faceIndices;
     std::cout << "[mesh count]:" << meshes.size() << "\n";
-    std::cout << "[vertex count]:" << faceIndices.size() << "\n";
+    std::cout << "[triangle count]:" << faceIndices.size() << "\n";
     //初始化树
     tree = std::vector<AccelNode>();
     tree.emplace_back(root);
