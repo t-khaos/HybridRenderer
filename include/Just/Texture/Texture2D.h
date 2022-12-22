@@ -28,7 +28,8 @@ inline Color3f Texture2D::SampleByNearest(float u, float v) const
     float y = v * (float) image->height + 0.5f;
     uint32_t s = static_cast<uint32_t>(x);
     uint32_t t = static_cast<uint32_t>(y);
-    return RGBA32ToColor3f(image->data[s + t * image->width]);
+    Color3f result = RGBA32ToColor3f(image->data[t * image->width + s]);
+    return LinearToSRGB(result);
 }
 inline Color3f Texture2D::SampleByBilinear(float u, float v) const
 {
@@ -50,6 +51,6 @@ inline Color3f Texture2D::SampleByBilinear(float u, float v) const
     Color3f u01 = RGBA32ToColor3f(image->data[x1 + y2 * image->width]);
     Color3f u11 = RGBA32ToColor3f(image->data[x2 + y2 * image->width]);
     //线性插值
-    return u00 * w00 + u10 * w10 + u01 * w01 + u11 * w11;
+    return LinearToSRGB(u00 * w00 + u10 * w10 + u01 * w01 + u11 * w11);
 }
 

@@ -125,7 +125,7 @@ void SimpleRasterizer::DrawTriangle(RasterVertex *triangle)
                 const auto &diffuseMap = context->GetTexture(0);
                 fragColor = diffuseMap->Evaluate(texcoord.x, texcoord.y);
             }
-            context->frameBuffer->colorBuffer[index] = Color3fToRGBA32(fragColor);
+            context->frameBuffer->colorBuffer[index] = Color3fToRGBA32(SRGBToLinear(fragColor));
         }
     }
 }

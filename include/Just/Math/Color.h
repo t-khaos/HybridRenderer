@@ -259,4 +259,27 @@ inline std::ostream &operator<<(std::ostream &os, const Color3<T> &c)
 {
     return os << "<" << c.r << " " << c.g << " " << c.b << ">" << std::endl;
 }
-
+//gamma correction
+inline float LinearRGBToSRGB(float value)
+{
+    if (value <= 0.0031308f)
+        return 12.92f * value;
+    else
+        return (1.0f + 0.055f)
+               * std::pow(value, 1.0f / 2.4f) - 0.055f;
+}
+inline float SRGBToLinearRGB(float value)
+{
+    if (value <= 0.04045f)
+        return value / 12.92f;
+    else
+        return std::pow((value + 0.055f) / (1.0f + 0.055f), 2.4f);
+}
+inline Color3f LinearToSRGB(const Color3f &c)
+{
+    return {LinearRGBToSRGB(c.r), LinearRGBToSRGB(c.g), LinearRGBToSRGB(c.b)};
+}
+inline Color3f SRGBToLinear(const Color3f &c)
+{
+    return {SRGBToLinearRGB(c.r), SRGBToLinearRGB(c.g), SRGBToLinearRGB(c.b)};
+}

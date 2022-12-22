@@ -41,7 +41,7 @@ void SimpleTracer::Render()
             }
             radiance /= sampler->spp;
             int index = y * width + x;
-            context->frameBuffer->colorBuffer[index] = Color3fToRGBA32(radiance);
+            context->frameBuffer->colorBuffer[index] = Color3fToRGBA32(SRGBToLinear(radiance));
         }
     }
 }

@@ -19,7 +19,7 @@ int main()
     float zNear = 1e-4f;
     float zFar = 1e4f;
     int spp = 1;
-    auto modelTransform =  Translate(Vector3f(0, 0, -3)) * RotateY(30) * RotateX(30);
+    auto modelTransform =  Translate(Vector3f(0, 0, -3)) * RotateY(90);
     //资源
     //==================================================================================================
     auto texture_diffuse = std::shared_ptr<Texture2D>(AssetsManager::LoadTexture2D("res/test_cube_diffuse.tga"));
