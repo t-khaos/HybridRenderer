@@ -25,7 +25,7 @@ void SimpleTracer::Render()
     int height = context->camera->res.y;
 #ifdef ENABLE_OPENMP
     //OpenMP多线程渲染
-#pragma omp parallel for schedule(dynamic) private(radiance)
+//#pragma omp parallel for schedule(dynamic) private(radiance)
 #endif
     for (int y = 0; y < height; ++y)
     {
@@ -41,7 +41,7 @@ void SimpleTracer::Render()
             }
             radiance /= sampler->spp;
             int index = y * width + x;
-            context->frameBuffer->colorBuffer[index] = Color3fToRGBA32(SRGBToLinear(radiance));
+            context->frameBuffer->colorBuffer[index] = Color3fToRGBA32(LinearToSRGB(radiance));
         }
     }
 }
@@ -54,7 +54,20 @@ Color3f SimpleTracer::Li(const Ray &ray) const
         return Color3f(0.0f);
     }
     //Vector3f normal = Abs(record.shadingFrame.n);
-    auto diffuseTexture = context->GetTexture(0);
+/*    auto diffuseTexture = context->GetTexture(0);
     auto diffuseColor = diffuseTexture->Evaluate(record.uv.x, record.uv.y);
-    return diffuseColor;
+    return diffuseColor;*/
+    Point3f position{1.0f, 1.0f, 0.0f};
+    Color3f energy = Color3f(100.0f);
+
+    Vector3f L = position - record.point;//光源方向
+    if (scene->RayIntersect(Ray(record.point + L * kEpsilon, L)))
+    {
+        return Color3f(0.0f);
+    }
+    auto normal = record.shadingFrame.n;
+    auto L_N = Normalize(L);
+    auto cosTheta = std::max(0.0f, Dot(normal, L_N));
+    Color3f result = 0.25f * kInvPI * kInvPI * energy * 5.0f * cosTheta / LengthSquare(L);
+    return result;
 }

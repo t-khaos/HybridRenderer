@@ -19,11 +19,11 @@ int main()
     float zNear = 1e-4f;
     float zFar = 1e4f;
     int spp = 1;
-    auto modelTransform =  Translate(Vector3f(0, 0, -3)) * RotateY(90);
+    auto modelTransform =  Translate(Vector3f(0, 0, -3));
     //资源
     //==================================================================================================
     auto texture_diffuse = std::shared_ptr<Texture2D>(AssetsManager::LoadTexture2D("res/test_cube_diffuse.tga"));
-    auto mesh_african = std::shared_ptr<Mesh>(AssetsManager::LoadMesh("res/cube.obj", modelTransform));
+    auto mesh_african = std::shared_ptr<Mesh>(AssetsManager::LoadMesh("res/model_african.obj", modelTransform));
     //相机
     //==================================================================================================
     auto camera = std::make_shared<PerspectiveCamera>(res, Inverse(LookAt(origin, target, up)), fov, zNear, zFar);
@@ -58,6 +58,6 @@ int main()
     std::cout << "[FPS]: " << 1000.0f / timer.time << std::endl;
     //==================================================================================================
     //保存
-    SaveImageToBMP("output/ray_trace.bmp", res.x, res.y, 4, context->frameBuffer->colorBuffer);
+    SaveImageToBMP("output/AF_ray_trace.bmp", res.x, res.y, 4, context->frameBuffer->colorBuffer);
     return 0;
 }

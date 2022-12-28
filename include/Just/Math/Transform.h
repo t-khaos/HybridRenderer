@@ -29,6 +29,10 @@ struct Transform
     {
         return {matrix * rhs.matrix, rhs.inverse * inverse};
     }
+    static Transform Identity()
+    {
+        return Transform();
+    }
 };
 
 //变换的逆

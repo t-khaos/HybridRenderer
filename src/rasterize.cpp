@@ -23,7 +23,7 @@ int main()
     auto texture_constant = std::make_shared<ConstantTexture>(Color3f{1.0f, 0.0f, 0.0f});
     Timer timer;
     timer.Begin();
-    auto mesh_african = std::shared_ptr<Mesh>(AssetsManager::LoadMesh("res/cube.obj"));
+    auto mesh_african = std::shared_ptr<Mesh>(AssetsManager::LoadMesh("res/model_african.obj"));
     timer.End();
     std::cout << "[load time]: " << timer.time << "ms" << std::endl;
     //相机
@@ -58,6 +58,6 @@ int main()
     std::cout << "[FPS]: " << 1000.0f / timer.time << std::endl;
     //==================================================================================================
     //保存
-    SaveImageToBMP("output/rasterize.bmp", res.x, res.y, 4, context->frameBuffer->colorBuffer);
+    SaveImageToBMP("output/AF_rasterize.bmp", res.x, res.y, 4, context->frameBuffer->colorBuffer);
     return 0;
 }

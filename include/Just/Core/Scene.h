@@ -2,7 +2,7 @@
 
 #include "Just/Common.h"
 #include "Just/Geometry/Mesh.h"
-#include "Accel.h"
+#include "Just/Core/Accel.h"
 #include "Just/Accel/NaiveAccel.h"
 #include "Just/Accel/BVHAccel.h"
 

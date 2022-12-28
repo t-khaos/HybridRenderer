@@ -260,7 +260,7 @@ inline std::ostream &operator<<(std::ostream &os, const Color3<T> &c)
     return os << "<" << c.r << " " << c.g << " " << c.b << ">" << std::endl;
 }
 //gamma correction
-inline float LinearRGBToSRGB(float value)
+inline float LinearToSRGB(float value)
 {
     if (value <= 0.0031308f)
         return 12.92f * value;
@@ -268,7 +268,7 @@ inline float LinearRGBToSRGB(float value)
         return (1.0f + 0.055f)
                * std::pow(value, 1.0f / 2.4f) - 0.055f;
 }
-inline float SRGBToLinearRGB(float value)
+inline float SRGBToLinear(float value)
 {
     if (value <= 0.04045f)
         return value / 12.92f;
@@ -277,9 +277,13 @@ inline float SRGBToLinearRGB(float value)
 }
 inline Color3f LinearToSRGB(const Color3f &c)
 {
-    return {LinearRGBToSRGB(c.r), LinearRGBToSRGB(c.g), LinearRGBToSRGB(c.b)};
+    return {std::clamp(LinearToSRGB(c.r), 0.0f, 1.0f),
+            std::clamp(LinearToSRGB(c.g), 0.0f, 1.0f),
+            std::clamp(LinearToSRGB(c.b), 0.0f, 1.0f)};
 }
 inline Color3f SRGBToLinear(const Color3f &c)
 {
-    return {SRGBToLinearRGB(c.r), SRGBToLinearRGB(c.g), SRGBToLinearRGB(c.b)};
+    return {std::clamp(SRGBToLinear(c.r), 0.0f, 1.0f),
+            std::clamp(SRGBToLinear(c.g), 0.0f, 1.0f),
+            std::clamp(SRGBToLinear(c.b), 0.0f, 1.0f)};
 }

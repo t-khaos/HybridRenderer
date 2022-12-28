@@ -5,8 +5,5 @@
     <sourceRoots>
       <file path="$PROJECT_DIR$/include" />
     </sourceRoots>
-    <excludeRoots>
-      <file path="$PROJECT_DIR$/output" />
-    </excludeRoots>
   </component>
 </project>

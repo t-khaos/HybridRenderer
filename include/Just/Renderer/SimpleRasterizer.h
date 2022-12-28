@@ -33,8 +33,10 @@ void SimpleRasterizer::Render()
             {
                 auto index = mesh->indices[i + j];
                 triangle[j].pos4 = Point4f{mesh->positions[index], 1};
-                triangle[j].texcoord = mesh->texcoords[index];
-                triangle[j].normal = mesh->normals[index];
+                if (mesh->texcoords.empty())triangle[j].texcoord = Point2f(0.0f);
+                else triangle[j].texcoord = mesh->texcoords[index];
+                if (mesh->normals.empty())triangle[j].normal = Vector3f(0.0f);
+                else triangle[j].normal = mesh->normals[index];
             }
             //绘制当前三角形
             DrawTriangle(triangle);
@@ -125,7 +127,7 @@ void SimpleRasterizer::DrawTriangle(RasterVertex *triangle)
                 const auto &diffuseMap = context->GetTexture(0);
                 fragColor = diffuseMap->Evaluate(texcoord.x, texcoord.y);
             }
-            context->frameBuffer->colorBuffer[index] = Color3fToRGBA32(SRGBToLinear(fragColor));
+            context->frameBuffer->colorBuffer[index] = Color3fToRGBA32(LinearToSRGB(fragColor));
         }
     }
 }
