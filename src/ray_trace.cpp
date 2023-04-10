@@ -11,19 +11,26 @@ int main()
 {
     //数据
     //==================================================================================================
-    Point3f target(0.0f, 0.0f, 0.0f);
-    Point3f origin(0.0f, 0.0f, 1.0f);
+    Point3f target(0.0f, 0.0f, 1.0f);
+    Point3f origin(0.0f, 0.0f, 0.0f);
     Vector3f up(0, 1, 0);
     Point2i res(768, 768);
     float fov = 45;
     float zNear = 1e-4f;
     float zFar = 1e4f;
     int spp = 1;
-    auto modelTransform =  Translate(Vector3f(0, 0, -3));
+    auto modelTransform =  Translate(Vector3f(0, 0, 50));
     //资源
     //==================================================================================================
-    auto texture_diffuse = std::shared_ptr<Texture2D>(AssetsManager::LoadTexture2D("res/test_cube_diffuse.tga"));
-    auto mesh_african = std::shared_ptr<Mesh>(AssetsManager::LoadMesh("res/model_african.obj", modelTransform));
+    std::string workspace = "G:\\Git\\HybridRenderer\\";
+    auto texture_diffuse = std::shared_ptr<Texture2D>(AssetsManager::LoadTexture2D(workspace+"res\\test_cube_diffuse.tga"));
+    auto texture_constant = std::make_shared<ConstantTexture>(Color3f{1.0f, 0.0f, 0.0f});
+
+    Timer timer;
+    timer.Begin();
+    auto mesh_african = std::shared_ptr<Mesh>(AssetsManager::LoadMesh(workspace+"res\\sphere.obj",modelTransform));
+    timer.End();
+    std::cout << "[load time]: " << timer.time << "ms" << std::endl;
     //相机
     //==================================================================================================
     auto camera = std::make_shared<PerspectiveCamera>(res, Inverse(LookAt(origin, target, up)), fov, zNear, zFar);
@@ -40,7 +47,6 @@ int main()
 
     //构建场景
     //==================================================================================================
-    Timer timer;
     timer.Begin();
     auto accel = std::make_shared<BVHAccel>();
     auto scene = std::make_shared<Scene>(accel);
@@ -58,6 +64,6 @@ int main()
     std::cout << "[FPS]: " << 1000.0f / timer.time << std::endl;
     //==================================================================================================
     //保存
-    SaveImageToBMP("output/AF_ray_trace.bmp", res.x, res.y, 4, context->frameBuffer->colorBuffer);
+    SaveImageToBMP(workspace+"output\\sphere_normal_ray_tracing_7.bmp", res.x, res.y, 4, context->frameBuffer->colorBuffer);
     return 0;
 }

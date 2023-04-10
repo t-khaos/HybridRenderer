@@ -20,12 +20,12 @@ public:
     std::shared_ptr<Accel> accel;
 };
 
-//�������������
+
 void Scene::AddMesh(const std::shared_ptr<Mesh> &mesh)
 {
     meshes.emplace_back(mesh);
 }
-//������ٽṹ
+
 void Scene::BuildAccel()
 {
     accel->Reset();

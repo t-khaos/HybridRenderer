@@ -5,13 +5,14 @@
 #include "Just/Core/Scene.h"
 #include "Just/Renderer/SimpleRasterizer.h"
 #include "Just/Tool/Timer.h"
+#include <filesystem>
 
 int main()
 {
     //数据
     //==================================================================================================
-    Point3f target(0.0f, 0.0f, 0.0f);
-    Point3f origin(0.0f, 0.0f, 1.0f);
+    Point3f target(0.0f, 0.0f, 1.0f);
+    Point3f origin(0.0f, 0.0f, 0.0f);
     Vector3f up(0, 1, 0);
     Point2i res(768, 768);
     float fov = 45;
@@ -19,17 +20,19 @@ int main()
     float zFar = 1e4f;
     //资源
     //==================================================================================================
-    auto texture_diffuse = std::shared_ptr<Texture2D>(AssetsManager::LoadTexture2D("res/test_cube_diffuse.tga"));
+    std::string workspace = "G:\\Git\\HybridRenderer\\";
+    auto texture_diffuse = std::shared_ptr<Texture2D>(AssetsManager::LoadTexture2D(workspace+"res\\test_cube_diffuse.tga"));
     auto texture_constant = std::make_shared<ConstantTexture>(Color3f{1.0f, 0.0f, 0.0f});
+
     Timer timer;
     timer.Begin();
-    auto mesh_african = std::shared_ptr<Mesh>(AssetsManager::LoadMesh("res/model_african.obj"));
+    auto mesh_african = std::shared_ptr<Mesh>(AssetsManager::LoadMesh(workspace+"res\\sphere.obj"));
     timer.End();
     std::cout << "[load time]: " << timer.time << "ms" << std::endl;
     //相机
     //==================================================================================================
     auto camera = std::make_shared<PerspectiveCamera>(res, LookAt(origin, target, up), fov, zNear, zFar);
-    auto modelTransform = Translate(Vector3f(0, 0, -3));
+    auto modelTransform = Translate(Vector3f(0, 0, 50));
     auto MVP = camera->GetProjective() * camera->GetView() * modelTransform;
     //帧缓冲
     //==================================================================================================
@@ -58,6 +61,6 @@ int main()
     std::cout << "[FPS]: " << 1000.0f / timer.time << std::endl;
     //==================================================================================================
     //保存
-    SaveImageToBMP("output/AF_rasterize.bmp", res.x, res.y, 4, context->frameBuffer->colorBuffer);
+    SaveImageToBMP(workspace+"output\\sphere_normal_rasterize_8.bmp", res.x, res.y, 4, context->frameBuffer->colorBuffer);
     return 0;
 }

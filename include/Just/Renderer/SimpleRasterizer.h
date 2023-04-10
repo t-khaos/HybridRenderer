@@ -113,19 +113,22 @@ void SimpleRasterizer::DrawTriangle(RasterVertex *triangle)
             beta = beta * w * triangle[1].rhw;
             gamma = gamma * w * triangle[2].rhw;
 
-
             //插值纹理坐标
             auto texcoord = alpha * triangle[0].texcoord + beta * triangle[1].texcoord +
                             gamma * triangle[2].
                                     texcoord;
             //插值法线
-            //auto normal = alpha *triangle[0].normal + beta *triangle[1].normal + gamma *triangle[2].normal;
+            auto normal = alpha *triangle[0].normal + beta *triangle[1].normal + gamma *triangle[2].normal;
+
 
             //片元着色
             Color3f fragColor;
             {
-                const auto &diffuseMap = context->GetTexture(0);
-                fragColor = diffuseMap->Evaluate(texcoord.x, texcoord.y);
+/*                const auto &diffuseMap = context->GetTexture(0);
+                fragColor = diffuseMap->Evaluate(texcoord.x, texcoord.y);*/
+
+
+                fragColor = 0.5f*(Color3f{normal.x, normal.y, normal.z} + Color3f(1,1,1));
             }
             context->frameBuffer->colorBuffer[index] = Color3fToRGBA32(LinearToSRGB(fragColor));
         }
