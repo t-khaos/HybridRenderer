@@ -5,9 +5,10 @@
 
 struct RasterVertex
 {
-    Point4f pos4; //3d position
-    Point2f pos2f; //2d position float
-    Point2i pos2i; //2d position int32
+    Point3f pos; //3d
+    Point4f pos4; //4d pos
+    Point2f pos2f; //2d pos float
+    Point2i pos2i; //2d pos int32
     float rhw{}; // 1/w
     Point2f texcoord;
     Vector3f normal;

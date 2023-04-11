@@ -19,7 +19,7 @@ int main()
     float zNear = 1e-4f;
     float zFar = 1e4f;
     int spp = 1;
-    auto modelTransform =  Translate(Vector3f(0, 0, 50));
+    auto modelTransform =  Translate(Vector3f(0, 0, 100));
     //资源
     //==================================================================================================
     std::string workspace = "G:\\Git\\HybridRenderer\\";
@@ -28,7 +28,8 @@ int main()
 
     Timer timer;
     timer.Begin();
-    auto mesh_african = std::shared_ptr<Mesh>(AssetsManager::LoadMesh(workspace+"res\\sphere.obj",modelTransform));
+    auto mesh1 = std::shared_ptr<Mesh>(AssetsManager::LoadMesh(workspace + "res\\sphere.obj", modelTransform));
+    auto mesh2 = std::shared_ptr<Mesh>(AssetsManager::LoadMesh(workspace+"res\\plane.obj",modelTransform));
     timer.End();
     std::cout << "[load time]: " << timer.time << "ms" << std::endl;
     //相机
@@ -50,7 +51,8 @@ int main()
     timer.Begin();
     auto accel = std::make_shared<BVHAccel>();
     auto scene = std::make_shared<Scene>(accel);
-    scene->AddMesh(mesh_african);
+    scene->AddMesh(mesh1);
+    scene->AddMesh(mesh2);
     scene->BuildAccel();
     timer.End();
     std::cout << "[build time]: " << timer.time << "ms" << std::endl;
@@ -64,6 +66,7 @@ int main()
     std::cout << "[FPS]: " << 1000.0f / timer.time << std::endl;
     //==================================================================================================
     //保存
-    SaveImageToBMP(workspace+"output\\sphere_normal_ray_tracing_7.bmp", res.x, res.y, 4, context->frameBuffer->colorBuffer);
+    SaveImageToPNG(workspace + "output\\sphere_normal_ray_tracing_2.png", res.x, res.y, 4,
+                   context->frameBuffer->colorBuffer);
     return 0;
 }

@@ -4,51 +4,66 @@
 #include "Just/Core/Renderer.h"
 #include "Just/Math/Color.h"
 
-struct SimpleRasterizer : public Rasterizer
-{
+struct SimpleRasterizer : public Rasterizer {
 public:
     SimpleRasterizer(const std::shared_ptr<Scene> &scene, const std::shared_ptr<RenderContext> &context)
             : Renderer(scene, context), Rasterizer(scene, context) {};
+
     ~SimpleRasterizer() override = default;
+
     virtual void Render() override;
+
 private:
     virtual void DrawTriangle(RasterVertex *triangle) override;
 };
 
-void SimpleRasterizer::Render()
-{
+void SimpleRasterizer::Render() {
     //遍历所有三角形网格
-    for (const auto &mesh: scene->accel->meshes)
-    {
+    for (const auto &mesh: scene->accel->meshes) {
         RasterVertex triangle[3];
 #ifdef ENABLE_OPENMP
         //OpenMP多线程渲染
 #pragma omp parallel for schedule(dynamic) private(triangle)
 #endif
         //遍历网格所有三角形
-        for (int i = 0; i < mesh->indices.size(); i += 3)
-        {
+        for (int i = 0; i < mesh->indices.size(); i += 3) {
+            auto idx0 = mesh->indices[i + 0];
+            auto idx1 = mesh->indices[i + 1];
+            auto idx2 = mesh->indices[i + 2];
+
             //更新三角形顶点信息
-            for (int j = 0; j < 3; j++)
-            {
-                auto index = mesh->indices[i + j];
-                triangle[j].pos4 = Point4f{mesh->positions[index], 1};
-                if (mesh->texcoords.empty())triangle[j].texcoord = Point2f(0.0f);
-                else triangle[j].texcoord = mesh->texcoords[index];
-                if (mesh->normals.empty())triangle[j].normal = Vector3f(0.0f);
-                else triangle[j].normal = mesh->normals[index];
+            for (int j = 0; j < 3; j++) {
+                auto idx = mesh->indices[i + j];
+                triangle[j].pos = mesh->positions[idx];
+                triangle[j].pos4 = Point4f{mesh->positions[idx], 1};
+                if (mesh->texcoords.empty()) {
+                    triangle[j].texcoord = Vector2f(0, 0);
+                } else {
+                    triangle[j].texcoord = mesh->texcoords[idx];
+                }
             }
+
+            auto faceNormal = Normalize(
+                    Cross((triangle[1].pos - triangle[0].pos), (triangle[2].pos - triangle[0].pos)));
+            for (int j = 0; j < 3; j++) {
+                auto idx = mesh->indices[i + j];
+                if (mesh->normals.empty()) {
+                    triangle[j].normal = faceNormal;
+                } else {
+                    triangle[j].normal = mesh->normals[idx];
+                }
+            }
+
             //绘制当前三角形
             DrawTriangle(triangle);
         }
     }
 }
-void SimpleRasterizer::DrawTriangle(RasterVertex *triangle)
-{
+
+void SimpleRasterizer::DrawTriangle(RasterVertex *triangle) {
     Bounds2i rect;
     //几何阶段
-    for (int i = 0; i < 3; ++i)
-    {
+    for (int i = 0; i < 3; ++i) {
         auto &vertex = triangle[i];
         //vertex shader
         {
@@ -71,7 +86,7 @@ void SimpleRasterizer::DrawTriangle(RasterVertex *triangle)
         vertex.pos2f = Point2f{context->camera->screenToRaster(vertex.pos4)};
         //四舍五入
         vertex.pos2i = Point2i{(int) (vertex.pos2f.x + 0.5f), (int) (vertex.pos2f.y + 0.5f)};
-        //vertex.pos2i = Point2i{(int) std::round(vertex.pos2f.x), (int) std::round(vertex.pos2f.y)};
+        //vertex.pos2i = Point2i{(int) std::round(vertex.pos2f.origin), (int) std::round(vertex.pos2f.target)};
 
 
         //设置三角形矩形范围
@@ -87,10 +102,8 @@ void SimpleRasterizer::DrawTriangle(RasterVertex *triangle)
         return;
     //光栅化阶段
     //OpenMP多线程渲染
-    for (int y = rect.pMin.y; y <= rect.pMax.y; y++)
-    {
-        for (int x = rect.pMin.x; x <= rect.pMax.x; x++)
-        {
+    for (int y = rect.pMin.y; y <= rect.pMax.y; y++) {
+        for (int x = rect.pMin.x; x <= rect.pMax.x; x++) {
             //计算当前像素的重心坐标
             auto [alpha, beta, gamma] = CalcBarycentric(triangle, (float) x, (float) y);
 
@@ -118,17 +131,17 @@ void SimpleRasterizer::DrawTriangle(RasterVertex *triangle)
                             gamma * triangle[2].
                                     texcoord;
             //插值法线
-            auto normal = alpha *triangle[0].normal + beta *triangle[1].normal + gamma *triangle[2].normal;
+            auto normal = alpha * triangle[0].normal + beta * triangle[1].normal + gamma * triangle[2].normal;
 
 
             //片元着色
             Color3f fragColor;
             {
 /*                const auto &diffuseMap = context->GetTexture(0);
-                fragColor = diffuseMap->Evaluate(texcoord.x, texcoord.y);*/
+                fragColor = diffuseMap->Evaluate(texcoord.origin, texcoord.target);*/
 
 
-                fragColor = 0.5f*(Color3f{normal.x, normal.y, normal.z} + Color3f(1,1,1));
+                fragColor = 0.5f * (Color3f{normal.x, normal.y, normal.z} + Color3f(1, 1, 1));
             }
             context->frameBuffer->colorBuffer[index] = Color3fToRGBA32(LinearToSRGB(fragColor));
         }

@@ -26,13 +26,14 @@ int main()
 
     Timer timer;
     timer.Begin();
-    auto mesh_african = std::shared_ptr<Mesh>(AssetsManager::LoadMesh(workspace+"res\\sphere.obj"));
+    auto mesh1 = std::shared_ptr<Mesh>(AssetsManager::LoadMesh(workspace + "res\\sphere.obj"));
+    auto mesh2 = std::shared_ptr<Mesh>(AssetsManager::LoadMesh(workspace+"res\\plane.obj"));
     timer.End();
     std::cout << "[load time]: " << timer.time << "ms" << std::endl;
     //相机
     //==================================================================================================
     auto camera = std::make_shared<PerspectiveCamera>(res, LookAt(origin, target, up), fov, zNear, zFar);
-    auto modelTransform = Translate(Vector3f(0, 0, 50));
+    auto modelTransform = Translate(Vector3f(0, 0, 100));
     auto MVP = camera->GetProjective() * camera->GetView() * modelTransform;
     //帧缓冲
     //==================================================================================================
@@ -47,7 +48,8 @@ int main()
     timer.Begin();
     auto accel = std::make_shared<NaiveAccel>();
     auto scene = std::make_shared<Scene>(accel);
-    scene->AddMesh(mesh_african);
+    scene->AddMesh(mesh1);
+    scene->AddMesh(mesh2);
     scene->BuildAccel();
     timer.End();
     std::cout << "[build time]: " << timer.time << "ms" << std::endl;
@@ -61,6 +63,7 @@ int main()
     std::cout << "[FPS]: " << 1000.0f / timer.time << std::endl;
     //==================================================================================================
     //保存
-    SaveImageToBMP(workspace+"output\\sphere_normal_rasterize_8.bmp", res.x, res.y, 4, context->frameBuffer->colorBuffer);
+    SaveImageToPNG(workspace + "output\\sphere_normal_rasterize_4.png", res.x, res.y, 4,
+                   context->frameBuffer->colorBuffer);
     return 0;
 }

@@ -113,7 +113,7 @@ Matrix<ROW, COL, T> operator*(const Matrix<ROW, COM, T> &mat1, const Matrix<COM,
                 ret[row][col] += mat1[row][i] * mat2[i][col];
     return ret;
 }
-//m * n
+//m * normal
 template<size_t ROW, size_t COL, typename T>
 Matrix<ROW, COL, T> operator*(const Matrix<ROW, COL, T> &mat, T val)
 {
@@ -123,7 +123,7 @@ Matrix<ROW, COL, T> operator*(const Matrix<ROW, COL, T> &mat, T val)
             ret[row][col] = mat[row][col] * val;
     return ret;
 }
-//n * m
+//normal * m
 template<size_t ROW, size_t COL, typename T>
 Matrix<ROW, COL, T> operator*(T val, const Matrix<ROW, COL, T> &mat2)
 {
@@ -132,19 +132,19 @@ Matrix<ROW, COL, T> operator*(T val, const Matrix<ROW, COL, T> &mat2)
 //==================================================================================================
 //矩阵除法
 //==================================================================================================
-//matrix / n
+//matrix / normal
 template<size_t ROW, size_t COL, typename T>
 Matrix<ROW, COL, T> operator/(const Matrix<ROW, COL, T> &mat, T val)
 {
     return mat * (1.0f / val);
 }
-//n / matrix
+//normal / matrix
 template<size_t ROW, size_t COL, typename T>
 Matrix<ROW, COL, T> operator/(T val, const Matrix<ROW, COL, T> &mat)
 {
     return mat * (1.0f / val);
 }
-//matrix /= n
+//matrix /= normal
 template<size_t ROW, size_t COL, typename T>
 Matrix<ROW, COL, T> &operator/=(Matrix<ROW, COL, T> &mat, T val)
 {

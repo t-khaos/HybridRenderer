@@ -239,7 +239,7 @@ Vector<N, T> &operator+=(Vector<N, T> &lhs, const Vector<N, T> &rhs)
     lhs = lhs + rhs;
     return lhs;
 }
-//v + n
+//v + normal
 template<size_t N, typename T>
 Vector<N, T> operator+(const Vector<N, T> &lhs, T rhs)
 {
@@ -248,13 +248,13 @@ Vector<N, T> operator+(const Vector<N, T> &lhs, T rhs)
         ret[i] = lhs[i] + rhs;
     return ret;
 }
-//n + v
+//normal + v
 template<size_t N, typename T>
 Vector<N, T> operator+(T lhs, const Vector<N, T> &rhs)
 {
     return rhs + lhs;
 }
-//v += n
+//v += normal
 template<size_t N, typename T>
 Vector<N, T> &operator+=(Vector<N, T> &lhs, T rhs)
 {
@@ -280,7 +280,7 @@ Vector<N, T> &operator-=(Vector<N, T> &lhs, const Vector<N, T> &rhs)
     lhs = lhs - rhs;
     return lhs;
 }
-//v - n
+//v - normal
 template<size_t N, typename T>
 Vector<N, T> operator-(const Vector<N, T> &lhs, T rhs)
 {
@@ -289,7 +289,7 @@ Vector<N, T> operator-(const Vector<N, T> &lhs, T rhs)
         ret[i] = lhs[i] - rhs;
     return ret;
 }
-//n - v
+//normal - v
 template<size_t N, typename T>
 Vector<N, T> operator-(T lhs, const Vector<N, T> &rhs)
 {
@@ -298,7 +298,7 @@ Vector<N, T> operator-(T lhs, const Vector<N, T> &rhs)
         ret[i] = lhs - rhs[i];
     return ret;
 }
-//v -= n
+//v -= normal
 template<size_t N, typename T>
 Vector<N, T> &operator-=(Vector<N, T> &lhs, T rhs)
 {
@@ -324,7 +324,7 @@ Vector<N, T> &operator*=(Vector<N, T> &lhs, const Vector<N, T> &rhs)
     lhs = lhs * rhs;
     return lhs;
 }
-//v * n
+//v * normal
 template<size_t N, typename T>
 Vector<N, T> operator*(const Vector<N, T> &lhs, T rhs)
 {
@@ -333,13 +333,13 @@ Vector<N, T> operator*(const Vector<N, T> &lhs, T rhs)
         ret[i] = lhs[i] * rhs;
     return ret;
 }
-//n * v
+//normal * v
 template<size_t N, typename T>
 Vector<N, T> operator*(T lhs, const Vector<N, T> &rhs)
 {
     return rhs * lhs;
 }
-//v *= n
+//v *= normal
 template<size_t N, typename T>
 Vector<N, T> &operator*=(Vector<N, T> &lhs, T rhs)
 {
@@ -365,7 +365,7 @@ Vector<N, T> &operator/=(Vector<N, T> &lhs, const Vector<N, T> &rhs)
     lhs = lhs / rhs;
     return lhs;
 }
-//v / n
+//v / normal
 template<size_t N, typename T>
 Vector<N, T> operator/(const Vector<N, T> &lhs, T rhs)
 {
@@ -374,7 +374,7 @@ Vector<N, T> operator/(const Vector<N, T> &lhs, T rhs)
         ret[i] = lhs[i] / rhs;
     return ret;
 }
-//n / v
+//normal / v
 template<size_t N, typename T>
 Vector<N, T> operator/(T lhs, const Vector<N, T> &rhs)
 {
@@ -383,7 +383,7 @@ Vector<N, T> operator/(T lhs, const Vector<N, T> &rhs)
         ret[i] = lhs / rhs[i];
     return ret;
 }
-//v /= n
+//v /= normal
 template<size_t N, typename T>
 Vector<N, T> &operator/=(Vector<N, T> &lhs, T rhs)
 {

@@ -29,7 +29,7 @@ void SimpleTracer::Render() {
 //#pragma omp parallel for schedule(dynamic) private(radiance)
 #endif
     for (int y = 0; y < height; ++y) {
-        //printf("\r%f\n", 100.0f * float(y) / float(film->resolution.y - 1));
+        //printf("\r%f\normal", 100.0f * float(target) / float(film->resolution.target - 1));
         for (int x = 0; x < width; ++x) {
             radiance = Color3f(0.0f);
             for (int i = 0; i < sampler->spp; ++i) {
@@ -51,7 +51,7 @@ Color3f SimpleTracer::Li(const Ray &ray) const {
         return Color3f(0.0f);
     }
 /*    auto diffuseTexture = context->GetTexture(0);
-    auto diffuseColor = diffuseTexture->Evaluate(record.uv.x, record.uv.y);
+    auto diffuseColor = diffuseTexture->Evaluate(record.uv.origin, record.uv.target);
     return diffuseColor;*/
 
     auto normal = record.shadingFrame.n;

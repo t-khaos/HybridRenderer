@@ -79,19 +79,19 @@ inline Color3<T> &operator*=(Color3<T> &c1, const Color3<T> &c2)
     c1.b *= c2.b;
     return c1;
 }
-//c*n
+//c*normal
 template<typename T>
 inline Color3<T> operator*(const Color3<T> &c, T val)
 {
     return {c.r * val, c.g * val, c.b * val};
 }
-//n*c
+//normal*c
 template<typename T>
 inline Color3<T> operator*(T val, const Color3<T> &c)
 {
     return {val * c.r, val * c.g, val * c.b};
 }
-//c*=n
+//c*=normal
 template<typename T>
 inline Color3<T> &operator*=(Color3<T> &c, T val)
 {
@@ -115,13 +115,13 @@ inline Color3<T> &operator/=(Color3<T> &c1, const Color3<T> &c2)
     c1.b /= c2.b;
     return c1;
 }
-//c/n
+//c/normal
 template<typename T, typename U>
 inline Color3<T> operator/(const Color3<T> &c, U val)
 {
     return {static_cast<T>(c.r / val), static_cast<T>(c.g / val), static_cast<T>(c.b / val)};
 }
-//c/=n
+//c/=normal
 template<typename T, typename U>
 inline Color3<T> &operator/=(Color3<T> &c, U val)
 {
@@ -177,19 +177,19 @@ inline Color4<T> &operator*=(Color4<T> &c1, const Color4<T> &c2)
     c1.a *= c2.a;
     return c1;
 }
-//c*n
+//c*normal
 template<typename T, typename U>
 inline Color4<T> operator*(const Color4<T> &c, U val)
 {
     return {static_cast<T>(c.r * val), static_cast<T>(c.g * val), static_cast<T>(c.b * val), c.a};
 }
-//n*c
+//normal*c
 template<typename T>
 inline Color4<T> operator*(T val, const Color4<T> &c)
 {
     return {val * c.r, val * c.g, val * c.b, val * c.a};
 }
-//c*=n
+//c*=normal
 template<typename T>
 inline Color4<T> &operator*=(Color4<T> &c, T val)
 {
@@ -215,13 +215,13 @@ inline Color4<T> &operator/=(Color4<T> &c1, const Color4<T> &c2)
     c1.a /= c2.a;
     return c1;
 }
-//c/n
+//c/normal
 template<typename T>
 inline Color4<T> operator/(const Color4<T> &c, T val)
 {
     return {c.r / val, c.g / val, c.b / val, c.a / val};
 }
-//c/=n
+//c/=normal
 template<typename T>
 inline Color4<T> &operator/=(Color4<T> &c, T val)
 {

@@ -25,9 +25,9 @@ constexpr float kEpsilon = 1e-4f;
 //数学计算
 inline float Radians(float deg) { return kPI / 180.0f * deg; }
 inline float Degrees(float rad) { return 180.0f / kPI * rad; }
-inline void SaveImageToBMP(const std::string &path, int width, int height, int channel, const void *data)
+inline void SaveImageToPNG(const std::string &path, int width, int height, int channel, const void *data)
 {
-    stbi_write_bmp(path.c_str(), width, height, channel, data);
+    stbi_write_png(path.c_str(), width, height, channel, data, channel*width);
 }
 //解析字符串
 template<typename T>

@@ -46,15 +46,15 @@ void HybridRenderer::Render()
     }
     //光线追踪部分
     Color3f radiance(0.0f);
-    int width = context->camera->res.x;
-    int height = context->camera->res.y;
+    int width = context->camera->res.origin;
+    int height = context->camera->res.target;
 #ifdef ENABLE_OPENMP
     //OpenMP多线程渲染
 #pragma omp parallel for schedule(dynamic) private(radiance)
 #endif
     for (int y = 0; y < height; ++y)
     {
-        //printf("\r%f\n", 100.0f * float(y) / float(film->resolution.y - 1));
+        //printf("\r%f\normal", 100.0f * float(target) / float(film->resolution.target - 1));
         for (int x = 0; x < width; ++x)
         {
             radiance = Color3f(0.0f);
@@ -110,7 +110,7 @@ void HybridRenderer::DrawTriangle(RasterVertex *triangle)
         vertex.pos2f = Point2f{context->camera->screenToRaster(vertex.pos4)};
         //四舍五入
         vertex.pos2i = Point2i{(int) (vertex.pos2f.x + 0.5f), (int) (vertex.pos2f.y + 0.5f)};
-        //vertex.pos2i = Point2i{(int) std::round(vertex.pos2f.x), (int) std::round(vertex.pos2f.y)};
+        //vertex.pos2i = Point2i{(int) std::round(vertex.pos2f.origin), (int) std::round(vertex.pos2f.target)};
 
 
         //设置三角形矩形范围
@@ -164,7 +164,7 @@ void HybridRenderer::DrawTriangle(RasterVertex *triangle)
             Color3f fragColor;
             {
                 const auto &diffuseMap = context->GetTexture(0);
-                fragColor = diffuseMap->Evaluate(texcoord.x, texcoord.y);
+                fragColor = diffuseMap->Evaluate(texcoord.origin, texcoord.target);
             }
             context->frameBuffer->colorBuffer[index] = Color3fToRGBA32(fragColor);
         }

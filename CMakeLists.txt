@@ -30,4 +30,4 @@ add_executable(
 add_executable(
         matrix_test
         src/math_test.cpp
-)
+        include/Just/Core/Emitter.h)
