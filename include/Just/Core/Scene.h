@@ -17,6 +17,7 @@ public:
     ~Scene() = default;
 public:
     std::vector<std::shared_ptr<Mesh>> meshes;
+    std::vector<Ref<Mesh>> emitters;
     std::shared_ptr<Accel> accel;
 };
 

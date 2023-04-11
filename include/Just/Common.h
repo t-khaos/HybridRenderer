@@ -1,17 +1,24 @@
 #pragma once
 
-#include <iostream>
 #include <memory>
-#include <cmath>
+
+#include <iostream>
+#include <utility>
 #include <algorithm>
-#include <vector>
+#include <functional>
+#include <filesystem>
+
 #include <string>
-#include <unordered_map>
-#include <queue>
-#include <fstream>
 #include <sstream>
-#include <stbi/stb_image.h>
-#include <stbi/stb_image_write.h>
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
+#include <queue>
+
+#include <random>
+#include <limits>
+#include <fstream>
+
 
 //定义
 #define ENABLE_OPENMP //开启OpenMP
@@ -22,13 +29,38 @@ constexpr float kInv2PI = 0.15915494309189533577f;
 constexpr float kInv4PI = 0.07957747154594766788f;
 constexpr float kSqrt2 = 1.41421356237309504880f;
 constexpr float kEpsilon = 1e-4f;
+
+template<typename T>
+using Scope = std::unique_ptr<T>;
+
+template<typename T, typename... Args>
+constexpr Scope<T> CreateScope(Args &&... args) {
+    return std::make_unique<T>(std::forward<Args>(args)...);
+}
+
+template<typename T>
+using Ref = std::shared_ptr<T>;
+
+template<typename T, typename... Args>
+constexpr Ref<T> CreateRef(Args &&... args) {
+    return std::make_shared<T>(std::forward<Args>(args)...);
+}
+
+namespace Path{
+    inline std::filesystem::path ProjectDir() {
+        std::filesystem::path projectPath = std::filesystem::current_path();
+        while (projectPath.filename() != "Ares") {
+            projectPath = projectPath.parent_path();
+        }
+        return projectPath;
+    }
+}
+
+
 //数学计算
 inline float Radians(float deg) { return kPI / 180.0f * deg; }
 inline float Degrees(float rad) { return 180.0f / kPI * rad; }
-inline void SaveImageToPNG(const std::string &path, int width, int height, int channel, const void *data)
-{
-    stbi_write_png(path.c_str(), width, height, channel, data, channel*width);
-}
+
 //解析字符串
 template<typename T>
 inline T StringToNumeric(const std::string &str)

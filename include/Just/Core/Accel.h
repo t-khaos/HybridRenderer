@@ -222,11 +222,11 @@ bool Accel::RayIntersect(const Ray &ray, HitRecord &record, bool isShadow = fals
         //插值法线坐标系
         if (!recordMesh->normals.empty())
         {
-            record.shadingFrame = Frame(Normalize(bary.x * N[idx0] + bary.y * N[idx1] + bary.z * N[idx2]));
+            record.shFrame = Frame(Normalize(bary.x * N[idx0] + bary.y * N[idx1] + bary.z * N[idx2]));
         }
         else
         {
-            record.shadingFrame = record.geometryFrame;
+            record.shFrame = record.geometryFrame;
         }
     }
     return isHit;

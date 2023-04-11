@@ -9,7 +9,7 @@ struct HitRecord
     Point3f point;
     Point2f uv;
     float hitTime;
-    Frame shadingFrame;
+    Frame shFrame;
     Frame geometryFrame;
     size_t meshIndex;
     HitRecord() : hitTime(0), meshIndex(-1) {}

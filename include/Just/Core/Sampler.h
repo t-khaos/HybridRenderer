@@ -12,8 +12,8 @@ struct Sampler
     explicit Sampler(int spp) : spp(spp), index(0) {}
     virtual ~Sampler() = default;
     virtual std::tuple<float, float> Sample(float i, float j) = 0;
-    virtual float Get1D();
-    virtual Point2f Get2D();
+    virtual float Next1D();
+    virtual Point2f Next2D();
     virtual void StartPixel();
     virtual bool StartNextPixel();
 };
@@ -26,11 +26,11 @@ bool Sampler::StartNextPixel()
 {
     return ++index < spp;
 }
-float Sampler::Get1D()
+float Sampler::Next1D()
 {
     return rng.UniformFloat();
 }
-Point2f Sampler::Get2D()
+Point2f Sampler::Next2D()
 {
     return {rng.UniformFloat(), rng.UniformFloat()};
 }

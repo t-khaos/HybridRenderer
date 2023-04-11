@@ -22,7 +22,7 @@ int main()
     auto modelTransform =  Translate(Vector3f(0, 0, 100));
     //资源
     //==================================================================================================
-    std::string workspace = "G:\\Git\\HybridRenderer\\";
+    std::string workspace = "D:\\HybridRenderer\\";
     auto texture_diffuse = std::shared_ptr<Texture2D>(AssetsManager::LoadTexture2D(workspace+"res\\test_cube_diffuse.tga"));
     auto texture_constant = std::make_shared<ConstantTexture>(Color3f{1.0f, 0.0f, 0.0f});
 
@@ -66,7 +66,7 @@ int main()
     std::cout << "[FPS]: " << 1000.0f / timer.time << std::endl;
     //==================================================================================================
     //保存
-    SaveImageToPNG(workspace + "output\\sphere_normal_ray_tracing_2.png", res.x, res.y, 4,
+    SaveImageToPNG(workspace + "output\\sphere_normal_ray_tracing_3.png", res.x, res.y, 4,
                    context->frameBuffer->colorBuffer);
     return 0;
 }

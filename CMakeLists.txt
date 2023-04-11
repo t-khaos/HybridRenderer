@@ -20,12 +20,10 @@ include_directories(
 add_executable(
         rasterize
         src/rasterize.cpp
-        src/stbi.c
 )
 add_executable(
         ray_trace
         src/ray_trace.cpp
-        src/stbi.c
 )
 add_executable(
         matrix_test

@@ -54,6 +54,6 @@ Color3f SimpleTracer::Li(const Ray &ray) const {
     auto diffuseColor = diffuseTexture->Evaluate(record.uv.origin, record.uv.target);
     return diffuseColor;*/
 
-    auto normal = record.shadingFrame.n;
+    auto normal = record.shFrame.n;
     return 0.5f*(Color3f{normal.x, normal.y, normal.z} + Color3f(1,1,1));
 }

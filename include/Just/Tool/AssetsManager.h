@@ -6,6 +6,11 @@
 #include "Just/Core/MeshVertex.h"
 #include "Just/Math/Transform.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stbi/stb_image.h>
+#include <stbi/stb_image_write.h>
+
 struct AssetsManager
 {
 public:
@@ -23,7 +28,10 @@ public:
 private:
     AssetsManager() = default;
 };
-
+inline void SaveImageToPNG(const std::string &path, int width, int height, int channel, const void *data)
+{
+    stbi_write_png(path.c_str(), width, height, channel, data, channel*width);
+}
 //读取图片
 Image *AssetsManager::LoadImage(const std::string &path)
 {
