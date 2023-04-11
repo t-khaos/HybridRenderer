@@ -75,8 +75,8 @@ struct Bounds3
     //包围盒拐角点
     Point3<T> Corner(int i) const {
         return {
-                (*this)[(i & 1)].origin,
-                (*this)[(i & 2)].target,
+                (*this)[(i & 1)].x,
+                (*this)[(i & 2)].y,
                 (*this)[(i & 4)].z
         };
     }

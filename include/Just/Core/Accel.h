@@ -205,7 +205,7 @@ bool Accel::RayIntersect(const Ray &ray, HitRecord &record, bool isShadow = fals
         const auto &N = recordMesh->normals;
         const auto &UV = recordMesh->texcoords;
         //获取顶点索引
-        const auto [idx0, idx1, idx2] = recordMesh->GetTriangle(f);
+        const auto [idx0, idx1, idx2] = recordMesh->GetTriangleIndices(f);
 
         //插值顶点
         record.point = bary.x * V[idx0] + bary.y * V[idx1] + bary.z * V[idx2];

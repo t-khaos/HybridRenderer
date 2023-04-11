@@ -25,6 +25,9 @@ public:
 void Scene::AddMesh(const std::shared_ptr<Mesh> &mesh)
 {
     meshes.emplace_back(mesh);
+    if(mesh->emitter!= nullptr){
+        emitters.emplace_back(mesh);
+    }
 }
 
 void Scene::BuildAccel()

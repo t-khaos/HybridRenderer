@@ -28,8 +28,8 @@ int main()
 
     Timer timer;
     timer.Begin();
-    auto mesh1 = std::shared_ptr<Mesh>(AssetsManager::LoadMesh(workspace + "res\\sphere.obj", modelTransform));
-    auto mesh2 = std::shared_ptr<Mesh>(AssetsManager::LoadMesh(workspace+"res\\plane.obj",modelTransform));
+    auto mesh1 = CreateRef<Mesh>(workspace + "res\\sphere.obj", modelTransform);
+    auto mesh2 = CreateRef<Mesh>(workspace+ "res\\plane.obj",modelTransform);
     timer.End();
     std::cout << "[load time]: " << timer.time << "ms" << std::endl;
     //相机
@@ -66,7 +66,7 @@ int main()
     std::cout << "[FPS]: " << 1000.0f / timer.time << std::endl;
     //==================================================================================================
     //保存
-    SaveImageToPNG(workspace + "output\\sphere_normal_ray_tracing_3.png", res.x, res.y, 4,
+    SaveImageToPNG(workspace + "output\\sphere_normal_ray_tracing_5.png", res.x, res.y, 4,
                    context->frameBuffer->colorBuffer);
     return 0;
 }
