@@ -165,7 +165,7 @@ bool Accel::RayIntersect(const Ray &ray, HitRecord &record, bool isShadow = fals
                             return true;
                         }
                         //记录交点信息
-                        record.meshIndex = meshIndex;
+                        record.hitMesh = meshes[meshIndex];
                         f = faceIndex;
                         isHit = true;
                     }
@@ -200,7 +200,7 @@ bool Accel::RayIntersect(const Ray &ray, HitRecord &record, bool isShadow = fals
         bary.z = record.uv.y;
 
         //网格缓冲引用
-        const auto &recordMesh = meshes[record.meshIndex];
+        const auto &recordMesh = record.hitMesh;
         const auto &V = recordMesh->positions;
         const auto &N = recordMesh->normals;
         const auto &UV = recordMesh->texcoords;
@@ -208,7 +208,7 @@ bool Accel::RayIntersect(const Ray &ray, HitRecord &record, bool isShadow = fals
         const auto [idx0, idx1, idx2] = recordMesh->GetTriangleIndices(f);
 
         //插值顶点
-        record.point = bary.x * V[idx0] + bary.y * V[idx1] + bary.z * V[idx2];
+        record.hitPoint = bary.x * V[idx0] + bary.y * V[idx1] + bary.z * V[idx2];
 
         //插值纹理坐标
         if (!UV.empty())
@@ -217,7 +217,7 @@ bool Accel::RayIntersect(const Ray &ray, HitRecord &record, bool isShadow = fals
         }
 
         //面法线坐标系
-        record.geometryFrame = Frame(Normalize(Cross(V[idx1] - V[idx0], V[idx2] - V[idx0])));
+        record.geoFrame = Frame(Normalize(Cross(V[idx1] - V[idx0], V[idx2] - V[idx0])));
 
         //插值法线坐标系
         if (!recordMesh->normals.empty())
@@ -226,7 +226,7 @@ bool Accel::RayIntersect(const Ray &ray, HitRecord &record, bool isShadow = fals
         }
         else
         {
-            record.shFrame = record.geometryFrame;
+            record.shFrame = record.geoFrame;
         }
     }
     return isHit;

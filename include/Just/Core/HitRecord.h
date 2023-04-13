@@ -4,13 +4,14 @@
 #include "Just/Math/Vector.h"
 #include "Just/Math/Frame.h"
 
+struct Mesh;
 struct HitRecord
 {
-    Point3f point;
+    Point3f hitPoint;
     Point2f uv;
     float hitTime;
     Frame shFrame;
-    Frame geometryFrame;
-    size_t meshIndex;
-    HitRecord() : hitTime(0), meshIndex(-1) {}
+    Frame geoFrame;
+    Ref<Mesh> hitMesh;
+    HitRecord() : hitTime(0) {}
 };

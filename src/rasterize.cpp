@@ -20,14 +20,14 @@ int main()
     float zFar = 1e4f;
     //资源
     //==================================================================================================
-    std::string workspace = "G:\\Git\\HybridRenderer\\";
+    std::string workspace = "D:\\HybridRenderer\\";
     auto texture_diffuse = std::shared_ptr<Texture2D>(AssetsManager::LoadTexture2D(workspace+"res\\test_cube_diffuse.tga"));
     auto texture_constant = std::make_shared<ConstantTexture>(Color3f{1.0f, 0.0f, 0.0f});
 
     Timer timer;
     timer.Begin();
-    auto mesh1 = std::shared_ptr<Mesh>(AssetsManager::LoadMesh(workspace + "res\\sphere.obj"));
-    auto mesh2 = std::shared_ptr<Mesh>(AssetsManager::LoadMesh(workspace+"res\\plane.obj"));
+    auto mesh1 = CreateRef<Mesh>(workspace + "res\\sphere.obj");
+    auto mesh2 = CreateRef<Mesh>(workspace+ "res\\plane.obj");
     timer.End();
     std::cout << "[load time]: " << timer.time << "ms" << std::endl;
     //相机
@@ -63,7 +63,7 @@ int main()
     std::cout << "[FPS]: " << 1000.0f / timer.time << std::endl;
     //==================================================================================================
     //保存
-    SaveImageToPNG(workspace + "output\\sphere_normal_rasterize_4.png", res.x, res.y, 4,
+    SaveImageToPNG(workspace + "output\\sphere_normal_rasterize_5.png", res.x, res.y, 4,
                    context->frameBuffer->colorBuffer);
     return 0;
 }

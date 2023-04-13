@@ -6,15 +6,15 @@
 #include "Just/Core/Sampler.h"
 
 struct EmitterQueryRecord {
-    Vector3f hitPoint{};
-    Point3f samplePoint{};
-    Vector3f normal{};
+    Vector3f p{};
+    Point3f ref_p{};
+    Vector3f n{};
     Vector3f wi{};
     float pdf{};
 
-    explicit EmitterQueryRecord(const Point3f &x) : hitPoint(x) {}
+    explicit EmitterQueryRecord(const Point3f &x) : p(x) {}
 
-    EmitterQueryRecord(const Point3f &ori, const Point3f &tar, const Vector3f &n) : hitPoint(ori), samplePoint(tar), normal(n) {
+    EmitterQueryRecord(const Point3f &ori, const Point3f &tar, const Vector3f &n) : p(ori), ref_p(tar), n(n) {
         wi = Normalize(tar - ori);
     }
 };

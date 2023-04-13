@@ -6,6 +6,7 @@
 #include "Just/Renderer/SimpleTracer.h"
 #include "Just/Tool/Timer.h"
 #include "Just/Sampler/TrapezoidalSampler .h"
+#include "Just/Emitter/AreaLight.h"
 
 int main()
 {
@@ -26,10 +27,18 @@ int main()
     auto texture_diffuse = std::shared_ptr<Texture2D>(AssetsManager::LoadTexture2D(workspace+"res\\test_cube_diffuse.tga"));
     auto texture_constant = std::make_shared<ConstantTexture>(Color3f{1.0f, 0.0f, 0.0f});
 
+
     Timer timer;
     timer.Begin();
     auto mesh1 = CreateRef<Mesh>(workspace + "res\\sphere.obj", modelTransform);
     auto mesh2 = CreateRef<Mesh>(workspace+ "res\\plane.obj",modelTransform);
+    mesh1->Active();
+    mesh2->Active();
+    auto lightTransform =  Translate(Vector3f(0, 50, 100));
+    auto lightMesh = CreateRef<Mesh>(workspace+"res\\plane.obj",lightTransform);
+    auto emitter = CreateRef<AreaLight>(Color3f(1000));
+    lightMesh->emitter = emitter;
+    lightMesh->Active();
     timer.End();
     std::cout << "[load time]: " << timer.time << "ms" << std::endl;
     //相机
@@ -53,6 +62,7 @@ int main()
     auto scene = std::make_shared<Scene>(accel);
     scene->AddMesh(mesh1);
     scene->AddMesh(mesh2);
+    scene->AddMesh(lightMesh);
     scene->BuildAccel();
     timer.End();
     std::cout << "[build time]: " << timer.time << "ms" << std::endl;
@@ -66,7 +76,7 @@ int main()
     std::cout << "[FPS]: " << 1000.0f / timer.time << std::endl;
     //==================================================================================================
     //保存
-    SaveImageToPNG(workspace + "output\\sphere_normal_ray_tracing_5.png", res.x, res.y, 4,
+    SaveImageToPNG(workspace + "output\\sphere_normal_ray_tracing_4.png", res.x, res.y, 4,
                    context->frameBuffer->colorBuffer);
     return 0;
 }
